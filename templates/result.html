@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection Results</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('../static/pixelcut-export.png'); /* Replace with your image path */
+            background-size: cover; /* Ensures the image covers the entire viewport */
+            background-position: center; /* Centers the image */
+            background-attachment: fixed; /* Keeps the image fixed when scrolling */
+            background-repeat: no-repeat; /* Prevents tiling */
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9); /* Adds a translucent white background for better readability */
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-heading {
+            color: #2d57a0;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .frame-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .frame-card {
+            background: linear-gradient(135deg, #ffffff, #f0f4ff);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            width: 160px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .frame-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .frame-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .frame-card p {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        .result-box, .statistics-box, .plot-box {
+            background: linear-gradient(135deg, #ffffe0, #f0f4ff);
+            border-radius: 12px;
+            border: 2px solid #1c387d;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+
+        .result-box:hover, .statistics-box:hover, .plot-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-box h3, .statistics-box h3, .plot-box h3 {
+            font-size: 1.5rem;
+            color: #2d57a0;
+        }
+
+        .result-box p, .statistics-box p, .plot-box p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .plot img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-custom {
+            background: linear-gradient(135deg, #2d57a0, #1c387d);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-custom:hover {
+            background: linear-gradient(135deg, #1c387d, #2d57a0);
+            transform: translateY(-2px);
+        }
+
+        .statistics p {
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .statistics p strong {
+            color: #2d57a0;
+        }
+
+        .text-muted {
+            color: #666 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="section-heading text-center">Deepfake Detection Results</h2>
+
+        <!-- Face Cropped Frames Section -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="section-heading text-center">Face Cropped Frames</h3>
+                <div class="frame-container">
+                    {% for face in faces %}
+                        <div class="frame-card">
+                            <img src="data:image/jpeg;base64,{{ face }}" alt="Cropped Face">
+                            <p class="fw-bold text-muted">Frame {{ loop.index }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Vertical Column for Results -->
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-6 result-box">
+                <h3 class="section-heading">Result</h3>
+                <p>{{ result }}</p>
+            </div>
+        </div>
+
+        <!-- Prediction Statistics -->
+        <div class="row mt-5">
+            <div class="col-md-6 statistics-box">
+                <h3 class="section-heading">Prediction Statistics</h3>
+                <p>Consistency: <strong>{{ consistency }}</strong></p>
+                <p>Accuracy: <strong>{{ accuracy }}%</strong></p>
+                <p>Average Confidence: <strong>{{ avg_confidence }}</strong></p>
+            </div>
+            <div class="col-md-6 plot-box">
+                <h3 class="section-heading text-center">Prediction Confidence</h3>
+                <div class="plot text-center">
+                    <img src="data:image/png;base64,{{ plot }}" alt="Prediction Plot" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="row mt-5">
+            <div class="col text-center">
+                <a href="/upload" class="btn btn-custom me-3">Upload Another Video</a>
+                <a href="/logout" class="btn btn-custom">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

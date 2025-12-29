@@ -1,0 +1,10 @@
+Flask
+Werkzeug
+numpy
+tensorflow
+opencv-python
+Pillow
+matplotlib
+scikit-learn
+scipy
+Flask-SQLAlchemy

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video - Deepfake Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Upload Video for Deepfake Detection</h2>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <input type="file" name="video" accept="video/*" required>
+                <input type="number" name="frame_skip" placeholder="Frame Skip (default: 20)" min="1">
+                <button type="submit">Upload</button>
+            </form>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
